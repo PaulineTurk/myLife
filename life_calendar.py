@@ -1,6 +1,5 @@
 import streamlit as st
-from datetime import datetime, timedelta
-import pandas as pd
+from datetime import datetime
 
 st.title("📅 Votre vie en cases")
 st.write("Visualisez chaque jour de votre vie potentielle jusqu'à 100 ans")
@@ -8,7 +7,7 @@ st.write("Visualisez chaque jour de votre vie potentielle jusqu'à 100 ans")
 # Input de la date de naissance
 birth_date = st.date_input(
     "Entrez votre date de naissance",
-    value=datetime(1990, 1, 1),
+    value=datetime(1997, 2, 20),
     min_value=datetime(1920, 1, 1),
     max_value=datetime.today()
 )
@@ -34,11 +33,11 @@ if birth_date:
     # Options d'affichage
     display_mode = st.radio(
         "Mode d'affichage",
-        ["Semaines (plus compact)", "Jours (détaillé)"],
+        ["Semaines", "Jours"],
         index=0
     )
 
-    if display_mode == "Semaines (plus compact)":
+    if display_mode == "Semaines":
         # Affichage par semaines
         total_weeks = 100 * 52  # 5200 semaines
         weeks_lived = days_lived // 7
@@ -53,9 +52,9 @@ if birth_date:
 
         for i in range(total_weeks):
             if i < weeks_lived:
-                color = "#000000"  # Noir pour les semaines passées
+                color = "#000000"
             else:
-                color = "#e0e0e0"  # Gris clair pour les semaines futures
+                color = "#e0e0e0"
 
             html += f'<div style="width: 10px; height: 10px; background-color: {color}; border: 1px solid #ccc;" title="Semaine {i+1}"></div>'
 
@@ -65,10 +64,7 @@ if birth_date:
         st.markdown(html, unsafe_allow_html=True)
 
     else:
-        # Affichage par jours (limité pour ne pas surcharger)
-        st.warning("⚠️ Mode jours : Affichage limité aux 10 premières années pour des raisons de performance")
-
-        days_to_show = min(10 * 365, total_days)
+        days_to_show = min(100 * 365, total_days)
         days_per_row = 365
 
         html = '<div style="display: grid; grid-template-columns: repeat(365, 3px); gap: 1px; margin-top: 20px;">'
@@ -82,7 +78,7 @@ if birth_date:
             html += f'<div style="width: 3px; height: 3px; background-color: {color};"></div>'
 
         html += '</div>'
-        html += f'<p style="margin-top: 20px; font-size: 12px;">Chaque carré = 1 jour (10 premières années affichées) | Noir = passé | Gris = futur</p>'
+        html += f'<p style="margin-top: 20px; font-size: 12px;">Chaque carré = 1 jour | Noir = passé | Gris = futur</p>'
 
         st.markdown(html, unsafe_allow_html=True)
 
